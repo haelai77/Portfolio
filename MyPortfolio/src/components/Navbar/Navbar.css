@@ -1,0 +1,45 @@
+        
+/* @import url('https://fonts.googleapis.com/css2?family=Coral+Pixels&display=swap'); */
+/* @import url('https://fonts.googleapis.com/css2?family=Jacquard+12&display=swap'); */
+@import url("https://fonts.bunny.net/css?family=bungee-shade:400");
+
+.logoFont {
+
+  	/* font-family: 'Jacquard 12', sans-serif;*/
+	font-family: 'Bungee Shade', sans-serif; 
+	font-size: 24px;
+	line-height: 1;
+}
+
+.navbar {
+	/* display: flex; */
+	justify-content: space-between;
+	align-items: center;
+	padding: 1.5rem 0rem;
+	background-color: var(--color-nav-bg);
+	/* background-color: rgba(255, 0, 0, 0.2); */
+
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+
+	color: var(--color-nav-text);
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+
+	flex: 0 0 auto; /* keeps navbar height fixed at natural size */	
+}
+
+.navbar--content{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	  width: 100%;
+
+	margin: 0 auto;
+	padding: 0 1rem; /* side padding for breathing space */
+
+	/* fluid max-width that adjusts with viewport */
+	max-width: clamp(var(--min-clamp), var(--preferred-clamp), var(--max-clamp));
+}

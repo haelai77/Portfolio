@@ -1,0 +1,106 @@
+* {
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+  font-family: 'poppins', sans-serif;
+}
+
+a{
+  text-decoration: none;
+  color:inherit;
+}
+
+:root {
+  --color-primary: #314039;
+  --color-secondary: #0b363c;
+  --color-bg: #0b363c;
+  --color-text: #dcfcca;
+  --color-boids: #FFFFFFD9;
+  --font-size: 16px;
+  
+  --color-nav-bg: white;
+  --color-nav-text: var(--color-primary);
+  
+  --min-clamp: 320px;
+  --max-clamp: 1280px;
+  --preferred-clamp: 95%;
+  
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: var(--font-size);
+  font-weight: bold;
+}
+
+.container--NavAndPageContent{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* use min-height instead of fixed height */
+  width: 100vw;
+  
+}
+
+.container--pageContent{
+  flex: 1;                  /* This makes it fill remaining space */
+  width: 100%;              /* prefer 100% to avoid 100vw + scrollbar jitter */
+  height: 100%;
+  position: relative;       /* useful if you have an absolutely-positioned canvas */
+  overflow: auto;           /* content can expand beyond viewport if needed */
+  z-index: 1;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+
+  margin: 2.5rem auto;
+  padding: 0 1rem; /* side padding for breathing space */
+
+  /* fluid max-width that adjusts with viewport */
+  max-width: clamp(var(--min-clamp), var(--preferred-clamp), var(--max-clamp));
+}
+
+.glass-card {
+
+  padding: 24px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  /* Realistic frosted look */
+  backdrop-filter: blur(5px); /* the blur */
+  -webkit-backdrop-filter: blur(5px); /* Safari support */
+
+  /* Depth and lighting */
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s ease;
+  z-index: 1;
+}
+
+/* Top subtle reflection line */
+.glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  opacity: 0.4;
+}
+
+/* Outer glow when hovering */
+.glass-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    0 0 18px rgba(255, 255, 255, 0.25);
+}
+
