@@ -1,17 +1,22 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import tsconfigPaths from 'vite-tsconfig-paths';
-
+import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  const isProd = mode === 'production'
+  const isProd = mode === 'production';
 
   return {
+    base: isProd ? '/Portfolio/' : '/',
     plugins: [react(), tsconfigPaths()],
-    base: isProd ? '/Portfolio/' : '/',   // <-- different base for dev and prod
+    resolve: {
+      alias: {
+        '@css': path.resolve(__dirname, 'src/app/css') // <-- This makes CSS imports work
+      }
+    },
     build: {
       sourcemap: true
     }
-  }
-})
+  };
+});

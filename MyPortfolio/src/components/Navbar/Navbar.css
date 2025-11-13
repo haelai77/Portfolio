@@ -4,12 +4,25 @@
 @import url("https://fonts.bunny.net/css?family=bungee-shade:400");
 
 .logoFont {
-
-  	/* font-family: 'Jacquard 12', sans-serif;*/
-	font-family: 'Bungee Shade', sans-serif; 
-	font-size: 24px;
-	line-height: 1;
+  font-family: 'Bungee Shade', sans-serif;
+  font-size: 24px;
+  line-height: 1;
+  display: inline-block;
+  cursor: pointer;
 }
+
+.logoFont span {
+  display: inline-block;
+  font-family: inherit; 
+  color: var(--color-nav-text);
+  transition: color 0.5s ease;
+}
+
+.logoFont:hover span {
+  color: goldenrod;
+}
+
+/* ==================================================== */
 
 .navbar {
 	/* display: flex; */

@@ -1,0 +1,45 @@
+@import url("https://fonts.bunny.net/css?family=bungee-shade:400");
+@import url('https://fonts.googleapis.com/css2?family=Nabla&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Neonderthaw&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Coral+Pixels&display=swap');
+
+.paragraph-font1 {
+	font-family: 'Bungee Shade', sans-serif;
+	color: var(--color-text);
+	font-size: 25px;
+	opacity: 0;
+	animation: fadeIn 0.5s ease-in forwards;
+}
+
+
+.paragraph-font2 {
+	font-family: 'Nabla', sans‑serif;
+	color: var(--color-text);
+	font-size: 25px;
+	opacity: 0;
+	animation: fadeIn 0.5s ease-in forwards;
+}
+
+.paragraph-font3 {
+	font-family: 'Neonderthaw', sans-serif;
+	color: var(--color-text);
+	font-size: 25px;
+	opacity: 0;
+	animation: fadeIn 0.5s ease-in forwards;
+}
+
+.paragraph-font4 {
+	font-family: 'Coral Pixels', sans-serif;
+	color: var(--text-color);
+	font-size: 25px;
+	opacity: 0;
+	animation: fadeIn 0.5s ease-in forwards;
+
+}
+
+
+@keyframes fadeIn {
+	to {
+		opacity: 1;
+	}
+}
