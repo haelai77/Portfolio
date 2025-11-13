@@ -4,10 +4,14 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
-  build: {
-    sourcemap: true
-  }
-});
+export default defineConfig(({ mode }) => {
+  const isProd = mode === 'production'
 
+  return {
+    plugins: [react(), tsconfigPaths()],
+    base: isProd ? '/Portfolio/' : '/',   // <-- different base for dev and prod
+    build: {
+      sourcemap: true
+    }
+  }
+})
