@@ -8,12 +8,12 @@ const Home = () => {
       <div className="paragraph-font2">Hi, I’m Leo!</div>
       <div className="paragraph-font3">Hi, I’m Leo!</div>
       <div className="paragraph-font4">Hi, I’m Leo!</div>
-
+{/* 
       <ASCIIText
         text='Leo_Lai'
         enableWaves={true}
         asciiFontSize={8}
-      />
+      /> */}
 
       <div className="paragraph-font2">Hi, I’m Leo!</div>
       <div className="paragraph-font3">Hi, I’m Leo!</div>
