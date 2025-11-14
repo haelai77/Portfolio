@@ -18,7 +18,7 @@ a{
   --color-boids: #FFFFFFD9;
   --font-size: 16px;
   
-  --color-nav-bg: white;
+  --color-nav-bg: #fffee6;
   --color-nav-text: var(--color-primary);
   
   --min-clamp: 320px;

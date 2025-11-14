@@ -9,10 +9,17 @@ export default defineConfig(({ mode }) => {
 
   return {
     base: isProd ? '/Portfolio/' : '/',
-    plugins: [react(), tsconfigPaths()],
+    plugins: [
+      react(),
+      tsconfigPaths({
+        projects: ['tsconfig.app.json'] // ensure it points to the right TS config
+      })
+    ],
     resolve: {
       alias: {
-        '@css': path.resolve(__dirname, 'src/app/css') // <-- This makes CSS imports work
+        '@components': path.resolve(__dirname, 'src/components'),
+        '@utils': path.resolve(__dirname, 'src/utils'),
+        '@css': path.resolve(__dirname, 'src/app/css')
       }
     },
     build: {
