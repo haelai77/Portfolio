@@ -12,20 +12,24 @@ a{
 
 :root {
   --color-primary: #314039;
-  --color-secondary: #0b363c;
-  --color-bg: #0b363c;
+  /* --color-secondary: #0b363c; */
+
+  /* --color-bg: #0b363c; */
+  /* --color-bg: #240B36; */
+  --color-bg-dark: #02182B;
+
   --color-text: #dcfcca;
   --color-boids: #FFFFFFD9;
   --font-size: 16px;
   
-  --color-nav-bg: #fffee6;
+  --color-nav-bg-light: #fffee6;
   --color-nav-text: var(--color-primary);
   
   --min-clamp: 320px;
   --max-clamp: 1280px;
   --preferred-clamp: 95%;
   
-  background-color: var(--color-bg);
+  background-color: var(--color-bg-dark);
   color: var(--color-text);
   font-size: var(--font-size);
   font-weight: bold;

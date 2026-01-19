@@ -11,6 +11,26 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.secret
+.pnp
+.pnp.*
+.npmrc
+.yarnrc
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.vite
+coverage
+*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*
