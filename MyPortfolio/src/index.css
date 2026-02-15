@@ -9,30 +9,37 @@ a{
   text-decoration: none;
   color:inherit;
 }
-
+/* 065006 deep green */
+/* 00272c deep blue */
 :root {
-  --color-primary: #314039;
-  /* --color-secondary: #0b363c; */
-
-  /* --color-bg: #0b363c; */
-  /* --color-bg: #240B36; */
-  --color-bg-dark: #02182B;
+  --color-bg: #1967a7;
 
   --color-text: #dcfcca;
   --color-boids: #FFFFFFD9;
   --font-size: 16px;
   
-  --color-nav-bg-light: #fffee6;
-  --color-nav-text: var(--color-primary);
+  --color-nav-bg: #f8d563;
+  --color-nav-text: #000;
+  --color-nav-logo-highlight: goldenrod;
   
   --min-clamp: 320px;
   --max-clamp: 1280px;
   --preferred-clamp: 95%;
   
-  background-color: var(--color-bg-dark);
-  color: var(--color-text);
+  background-color: var(--color-bg);
+  color: var(--color-text); /* default text color e.g. paragraphs*/
   font-size: var(--font-size);
   font-weight: bold;
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #00272c;
+  --color-text: #dcfcca;
+  --color-boids: #FFFFFFB3;
+
+  --color-nav-bg: #f1cc59;
+  --color-nav-text: #000;
+  --color-nav-logo-highlight: goldenrod;
 }
 
 .container--NavAndPageContent{

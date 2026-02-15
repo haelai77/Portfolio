@@ -19,7 +19,7 @@ const Navbar = () => {
                 {char === " " ? "\u00A0" : char} {/* non-breaking space */}
               </span>
             );
-          })}
+          })}🏝️
         </div>
 
 

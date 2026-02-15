@@ -33,9 +33,9 @@ type Boid = {
 
 const BoidsBackground: React.FC<BoidsBackgroundProps> = ({
 	numBoids,
-	density = 3,
-	// glyph = "LEO᯽",
-	glyph = "➤",
+	// density = 3,
+	density = 5,
+	glyph = "LEO᯽➤",
 	baseSize = 25,
 	opacity = 0.55,
 	color = "--color-boids",
