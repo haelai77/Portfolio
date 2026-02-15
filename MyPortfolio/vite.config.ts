@@ -22,6 +22,11 @@ export default defineConfig(({ mode }) => {
         '@css': path.resolve(__dirname, 'src/app/css')
       }
     },
+    server: {
+      host: true,
+      port: 5173,
+      strictPort: true
+    },
     build: {
       sourcemap: true
     }

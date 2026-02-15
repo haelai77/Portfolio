@@ -1,0 +1,15 @@
+{
+  "name": "portfolio",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "workspaceFolder": "/workspaces/Portfolio",
+  "forwardPorts": [5173, 4173],
+  "postCreateCommand": "cd MyPortfolio && npm ci",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  }
+}
