@@ -29,12 +29,11 @@
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: stretch;
-	width: 280px;
-	min-width: 280px;
+	width: max-content;
+	max-width: 100%;
 	min-height: 100vh;
 	padding: 2rem 1.25rem;
 	background-color: var(--color-nav-bg);
-	border-right: 1px solid rgba(0, 0, 0, 0.12);
 	color: var(--color-nav-text);
 	position: sticky;
 	top: 0;

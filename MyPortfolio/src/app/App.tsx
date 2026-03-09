@@ -6,9 +6,9 @@ const App = () => {
   return (
       <div className="container--NavAndPageContent">
         <Navbar />
-        <BoidsBackground color="--color-boids"/>
 
         <div className="container--pageContent">
+          <BoidsBackground color="--color-boids"/>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/cv" element={<CV />} />

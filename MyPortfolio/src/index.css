@@ -48,6 +48,7 @@ a{
   min-height: 100vh; /* use min-height instead of fixed height */
   width: 100%;
   position: relative;
+  background-color: var(--color-nav-bg);
 }
 
 .container--pageContent{
@@ -55,9 +56,13 @@ a{
   min-width: 0;
   min-height: 100vh;
   position: relative;       /* useful if you have an absolutely-positioned canvas */
-  overflow: auto;           /* content can expand beyond viewport if needed */
+  overflow-x: hidden;
+  overflow-y: auto;
   z-index: 1;
   padding: 2rem;
+  background-color: var(--color-bg);
+  border-top-left-radius: 32px;
+  border-bottom-left-radius: 32px;
 }
 
 @media (max-width: 768px) {
@@ -68,6 +73,8 @@ a{
   .container--pageContent{
     min-height: 0;
     padding: 1rem;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
 
