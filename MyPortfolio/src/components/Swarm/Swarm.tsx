@@ -1,305 +1,214 @@
-'use client'
-import "./Swarm.css";
+'use client';
+
+import React, { useEffect, useMemo, useRef } from 'react';
 import getCssVariableValue from '@utils/StringParsing/CssVariables';
 
-import React, { useEffect, useMemo, useRef } from "react";
+import './Swarm.css';
+import { drawBoids } from './render';
+import { createBoids, resolveBoidCount, stepBoids } from './simulation';
 
-type BoidsBackgroundProps = {
-	numBoids?: number;
-	density?: number;
-	glyph?: string;
-	baseSize?: number;
-	opacity?: number;
-	color?: string;
-	speed?: number;
-	separation?: number;
-	cohesion?: number;
-	alignment?: number;
-	maxSpeed?: number;
-	perception?: number;
-	jitter?: number; // new: small random steering noise
-	className?: string;
-	style?: React.CSSProperties;
-	paused?: boolean;
+export type SwarmProps = {
+  numBoids?: number;
+  density?: number;
+  glyph?: string;
+  baseSize?: number;
+  opacity?: number;
+  color?: string;
+  speed?: number;
+  separation?: number;
+  cohesion?: number;
+  alignment?: number;
+  maxSpeed?: number;
+  perception?: number;
+  jitter?: number;
+  className?: string;
+  style?: React.CSSProperties;
+  paused?: boolean;
 };
 
-type Boid = {
-	glyph?: string;
-	x: number;
-	y: number;
-	vx: number;
-	vy: number;
+const BLEED_CSS_PX = 40;
+
+const resizeCanvas = (canvas: HTMLCanvasElement): { width: number; height: number; dpr: number } => {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  const width = Math.max(1, Math.floor(rect.width * dpr));
+  const height = Math.max(1, Math.floor(rect.height * dpr));
+
+  canvas.width = width;
+  canvas.height = height;
+  canvas.style.width = `${Math.floor(rect.width)}px`;
+  canvas.style.height = `${Math.floor(rect.height)}px`;
+
+  return { width, height, dpr };
 };
 
-const BoidsBackground: React.FC<BoidsBackgroundProps> = ({
-	numBoids,
-	// density = 3,
-	density = 5,
-	glyph = "LEO᯽➤",
-	baseSize = 25,
-	opacity = 0.55,
-	color = "--color-boids",
-	speed = 0.5-0.1,
-	maxSpeed = 0.7-0.1,
-	separation = 0.5,
-	cohesion = 0.0003,
-	alignment = 0.03,
-	perception = 80,
-	jitter = 0.001,
-	paused = false,
+/**
+ * Animated boids background rendered into a full-size canvas.
+ *
+ * Responsibilities:
+ * 1) Own the canvas lifecycle and resize behavior.
+ * 2) Own animation scheduling (requestAnimationFrame).
+ * 3) Delegate boid movement and rendering to dedicated modules.
+ */
+const Swarm: React.FC<SwarmProps> = ({
+  numBoids,
+  density = 5,
+  glyph = 'LEO᯽➤',
+  baseSize = 25,
+  opacity = 0.55,
+  color = '--color-boids',
+  speed = 0.4,
+  maxSpeed = 0.6,
+  separation = 0.5,
+  cohesion = 0.0003,
+  alignment = 0.03,
+  perception = 80,
+  jitter = 0.001,
+  className,
+  style,
+  paused = false,
 }) => {
-	const canvasRef = useRef<HTMLCanvasElement | null>(null);
-	const rafRef = useRef<number | null>(null);
-	const boidsRef = useRef<Boid[]>([]);
-	const dprRef = useRef<number>(1);
-	const reducedMotion = useMemo(
-		() =>
-		typeof window !== "undefined" &&
-		window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches,
-		[]
-	);
-	const BLEED_CSS_PX = 40;
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const boidsRef = useRef<ReturnType<typeof createBoids>>([]);
+  const dprRef = useRef<number>(1);
 
-	// Resize & DPI setup
-	const resize = () => {
-		const canvas = canvasRef.current!;
-		const rect = canvas.getBoundingClientRect();
-		const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-		dprRef.current = dpr;
+  const reducedMotion = useMemo(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches,
+    []
+  );
 
-		// Canvas buffer matches visible size (no scaling / no overflow)
-		canvas.width  = Math.max(1, Math.floor(rect.width  * dpr));
-		canvas.height = Math.max(1, Math.floor(rect.height * dpr));
-		canvas.style.width  = `${Math.floor(rect.width)}px`;
-		canvas.style.height = `${Math.floor(rect.height)}px`;
-	};
-	
-	const initBoids = () => {
-	const canvas = canvasRef.current!;
-	const w = canvas.width;
-	const h = canvas.height;
-	const bleed = BLEED_CSS_PX * dprRef.current;
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return;
+    }
 
-	// density from visible pixels (not the virtual area)
-	const pxArea = (w * h) / (dprRef.current * dprRef.current);
-	const count = numBoids ?? Math.max(8, Math.round((pxArea / 100000) * density));
+    const initializeBoids = (): void => {
+      const { width, height, dpr } = resizeCanvas(canvas);
+      dprRef.current = dpr;
 
-	boidsRef.current = Array.from({ length: count }, () => {
-		const angle = Math.random() * Math.PI * 2;
-		const speed0 = 0.5 + Math.random() * 1.2;
-		return {
-		x: Math.random() * (w + 2 * bleed) - bleed, // [-bleed, w+bleed]
-		y: Math.random() * (h + 2 * bleed) - bleed, // [-bleed, h+bleed]
-		vx: Math.cos(angle) * speed0,
-		vy: Math.sin(angle) * speed0,
-		glyph: (glyph.length === 1 ? glyph : glyph[(Math.random() * glyph.length) | 0]) as string,
-		};
-	});
-	};
+      const bounds = {
+        width,
+        height,
+        bleed: BLEED_CSS_PX * dpr,
+      };
 
+      const count = resolveBoidCount({
+        width,
+        height,
+        dpr,
+        density,
+        numBoids,
+      });
 
-// ------------------------------------------
-// Animation loop
-// ------------------------------------------
-const tick = () => {
-	const canvas = canvasRef.current;
-	if (!canvas) return;
+      boidsRef.current = createBoids({
+        count,
+        glyphPool: glyph,
+        bounds,
+      });
+    };
 
-	const ctx = canvas.getContext("2d");
-	if (!ctx) return;
+    initializeBoids();
 
-	const w = canvas.width, h = canvas.height;
-	const bleed = BLEED_CSS_PX * dprRef.current;
-	const simW = w + 2 * bleed;
-	const simH = h + 2 * bleed;
-	const boids = boidsRef.current;
-	const perceptionR = perception * dprRef.current;
+    const observer = new ResizeObserver(initializeBoids);
+    observer.observe(canvas);
 
-	for (let i = 0; i < boids.length; i++) {
-	const b = boids[i];
+    return () => {
+      observer.disconnect();
+    };
+  }, [density, glyph, numBoids]);
 
-	let vxAlign = 0,
-		vyAlign = 0;
-	let cx = 0,
-		cy = 0;
-	let sx = 0,
-		sy = 0;
-	let wSum = 0;
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return;
+    }
 
-	// --- Distance-weighted neighborhood forces ---
-	for (let j = 0; j < boids.length; j++) {
-		if (i === j) continue;
-		const other = boids[j];
-		const dx = other.x - b.x;
-		const dy = other.y - b.y;
-		const dist2 = dx * dx + dy * dy;
+    if (paused || reducedMotion) {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      return;
+    }
 
-		if (dist2 < perceptionR * perceptionR && dist2 > 0.01) {
-			const dist = Math.sqrt(dist2); // linear distance
-			const t = Math.min(1, dist / perceptionR); // normalized distance [0..1]
-			const w = 1 - t * t; // quadratic falloff weighting
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
 
-			// Alignment + cohesion
-			vxAlign += other.vx * w;
-			vyAlign += other.vy * w;
-			cx += other.x * w;
-			cy += other.y * w;
-			wSum += w;
+    const animate = (): void => {
+      const width = canvas.width;
+      const height = canvas.height;
+      const dpr = dprRef.current;
 
-			// Separation (repel close neighbors)
-			const inv = 1 / dist2;
-			sx -= dx * inv;
-			sy -= dy * inv;
-		}
-	}
+      stepBoids({
+        boids: boidsRef.current,
+        bounds: {
+          width,
+          height,
+          bleed: BLEED_CSS_PX * dpr,
+        },
+        config: {
+          alignment,
+          cohesion,
+          separation,
+          perception,
+          jitter,
+          speed,
+          maxSpeed,
+        },
+        dpr,
+      });
 
-	// Combine weighted contributions
-	if (wSum > 0) {
-		// Alignment
-		b.vx += (vxAlign / wSum - b.vx) * alignment;
-		b.vy += (vyAlign / wSum - b.vy) * alignment;
+      drawBoids({
+        ctx,
+        boids: boidsRef.current,
+        width,
+        height,
+        dpr,
+        baseSize,
+        opacity,
+        color: getCssVariableValue(color),
+      });
 
-		// Cohesion
-		b.vx += (cx / wSum - b.x) * cohesion;
-		b.vy += (cy / wSum - b.y) * cohesion;
+      rafRef.current = requestAnimationFrame(animate);
+    };
 
-		// Separation
-		b.vx += sx * separation;
-		b.vy += sy * separation;
-	}
+    rafRef.current = requestAnimationFrame(animate);
 
-	// --- Small jitter to avoid synchronization ---
-	b.vx += (Math.random() - 0.5) * jitter;
-	b.vy += (Math.random() - 0.5) * jitter;
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+      rafRef.current = null;
+    };
+  }, [
+    alignment,
+    baseSize,
+    cohesion,
+    color,
+    jitter,
+    maxSpeed,
+    opacity,
+    paused,
+    perception,
+    reducedMotion,
+    separation,
+    speed,
+  ]);
 
-	// Limit both minimum and maximum speed
-	const s = Math.hypot(b.vx, b.vy) || 1e-6;
-	const maxV = maxSpeed * speed * dprRef.current;
-	const minV = 0.2 * maxV; // ~20% of max speed; tweak as needed
-
-	if (s > maxV) {
-		// Cap high speed
-		b.vx = (b.vx / s) * maxV;
-		b.vy = (b.vy / s) * maxV;
-	} else if (s < minV) {
-		// Boost low speed
-		b.vx = (b.vx / s) * minV;
-		b.vy = (b.vy / s) * minV;
-	}
-
-	// Move
-	b.x += b.vx;
-	b.y += b.vy;
-
-	// Wrap edges
-    // wrap on [-bleed, w+bleed] × [-bleed, h+bleed]
-    if (b.x < -bleed) b.x += simW;
-    if (b.x > w + bleed) b.x -= simW;
-    if (b.y < -bleed) b.y += simH;
-    if (b.y > h + bleed) b.y -= simH;
-	}
-
-	// Draw
-	ctx.clearRect(0, 0, w, h);
-	ctx.save();
-	ctx.fillStyle = getCssVariableValue(color);
-
-	const fontPx = Math.max(8, baseSize * dprRef.current);
-	ctx.font = `bold ${fontPx}px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"`;
-	ctx.textAlign = "center";
-	ctx.textBaseline = "middle";
-
-	for (const b of boids) {
-		const angle = Math.atan2(b.vy, b.vx);
-		ctx.globalAlpha = opacity;
-		ctx.save();
-		ctx.translate(b.x, b.y);
-		ctx.rotate(angle);
-		ctx.fillText(b.glyph ?? "?", 0, 0);
-		ctx.restore();
-	}
-	ctx.restore();
-
-	rafRef.current = requestAnimationFrame(tick);
+  return (
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      className={className ? `boidsBackground ${className}` : 'boidsBackground'}
+      style={style}
+    />
+  );
 };
 
-// ------------------------------------------
-// Setup and teardown
-// ------------------------------------------
-useEffect(() => {
-	const canvas = canvasRef.current;
-	if (!canvas) return;
-
-	const handleResize = () => {
-		const prevCount = boidsRef.current.length;
-		resize();
-		initBoids();
-
-		// Adjust boid count if numBoids prop changes
-		if (typeof numBoids === "number" && boidsRef.current.length !== prevCount) {
-			boidsRef.current = boidsRef.current.slice(0, numBoids);
-			while (boidsRef.current.length < numBoids) {
-			boidsRef.current.push({
-				x: Math.random() * canvas.width,
-				y: Math.random() * canvas.height,
-				vx: (Math.random() - 0.5) * 2,
-				vy: (Math.random() - 0.5) * 2,
-			});
-			}
-		}
-	};
-
-	handleResize();
-	const ro = new ResizeObserver(handleResize);
-	ro.observe(canvas);
-
-	if (!paused && !reducedMotion) {
-		rafRef.current = requestAnimationFrame(tick);
-	}
-
-	return () => {
-		ro.disconnect();
-		if (rafRef.current) cancelAnimationFrame(rafRef.current);
-	};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [
-	numBoids,
-	density,
-	glyph,
-	baseSize,
-	opacity,
-	color,
-	speed,
-	separation,
-	cohesion,
-	alignment,
-	maxSpeed,
-	perception,
-	paused,
-	reducedMotion,
-	jitter,
-]);
-
-// Pause/resume
-useEffect(() => {
-	if (!canvasRef.current) return;
-
-	if (paused || reducedMotion) {
-		if (rafRef.current) cancelAnimationFrame(rafRef.current);
-		rafRef.current = null;
-	} else if (!rafRef.current) {
-		rafRef.current = requestAnimationFrame(tick);
-	}
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [paused, reducedMotion]);
-
-return (
-	<canvas
-		ref={canvasRef}
-		aria-hidden="true"
-		className="boidsBackground"
-	/>
-);
-};
-
-export default BoidsBackground;
+export default Swarm;

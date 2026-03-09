@@ -25,7 +25,13 @@ export default defineConfig(({ mode }) => {
     server: {
       host: true,
       port: 5173,
-      strictPort: true
+      strictPort: true,
+      watch: {
+        // Containers/remote filesystems can miss native fs events.
+        // Polling keeps HMR (hot module replacement) reliable when forwarding ports.
+        usePolling: true,
+        interval: 120
+      }
     },
     build: {
       sourcemap: true
