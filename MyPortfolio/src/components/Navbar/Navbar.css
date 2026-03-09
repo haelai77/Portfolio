@@ -25,33 +25,47 @@
 /* ==================================================== */
 
 .navbar {
-	/* display: flex; */
-	justify-content: space-between;
-	align-items: center;
-	padding: 1.5rem 0rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	width: 280px;
+	min-width: 280px;
+	min-height: 100vh;
+	padding: 2rem 1.25rem;
 	background-color: var(--color-nav-bg);
-
-	border-bottom-left-radius: 0px;
-	border-bottom-right-radius: 0px;
-
+	border-right: 1px solid rgba(0, 0, 0, 0.12);
 	color: var(--color-nav-text);
 	position: sticky;
 	top: 0;
 	z-index: 1000;
-
-	flex: 0 0 auto; /* keeps navbar height fixed at natural size */	
+	flex: 0 0 auto;
 }
 
 .navbar--content{
 	display: flex;
-	justify-content: space-between;
-	align-items: center;
-
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: 2rem;
 	width: 100%;
+	margin: 0;
+	padding: 0;
+	max-width: none;
+}
 
-	margin: 0 auto;
-	padding: 0 1rem; /* side padding for breathing space */
+@media (max-width: 768px) {
+	.navbar {
+		width: 100%;
+		min-width: 0;
+		min-height: auto;
+		padding: 1rem;
+		position: relative;
+		border-right: 0;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+	}
 
-	/* fluid max-width that adjusts with viewport */
-	max-width: clamp(var(--min-clamp), var(--preferred-clamp), var(--max-clamp));
+	.navbar--content {
+		gap: 1rem;
+	}
 }

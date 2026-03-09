@@ -44,19 +44,31 @@ a{
 
 .container--NavAndPageContent{
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   min-height: 100vh; /* use min-height instead of fixed height */
-  width: 100vw;
-  
+  width: 100%;
+  position: relative;
 }
 
 .container--pageContent{
   flex: 1;                  /* This makes it fill remaining space */
-  width: 100%;              /* prefer 100% to avoid 100vw + scrollbar jitter */
-  height: 100%;
+  min-width: 0;
+  min-height: 100vh;
   position: relative;       /* useful if you have an absolutely-positioned canvas */
   overflow: auto;           /* content can expand beyond viewport if needed */
   z-index: 1;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .container--NavAndPageContent{
+    flex-direction: column;
+  }
+
+  .container--pageContent{
+    min-height: 0;
+    padding: 1rem;
+  }
 }
 
 .container {

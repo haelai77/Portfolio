@@ -4,11 +4,11 @@ import { Navbar, BoidsBackground } from '../components'
 
 const App = () => {
   return (
-      <div className=".container--NavAndPageContent">
+      <div className="container--NavAndPageContent">
         <Navbar />
         <BoidsBackground color="--color-boids"/>
 
-        <div className=".container--pageContent">
+        <div className="container--pageContent">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/cv" element={<CV />} />
