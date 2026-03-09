@@ -2,8 +2,11 @@
   "name": "portfolio",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
   "workspaceFolder": "/workspaces/Portfolio",
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/node/.ssh,type=bind"
+  ],
   "forwardPorts": [5173, 4173],
-  "postCreateCommand": "cd MyPortfolio && npm ci",
+  "postCreateCommand": ".devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
