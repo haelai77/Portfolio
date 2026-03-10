@@ -55,10 +55,10 @@
 	width: 100%;
 	margin: 0;
 	padding: 0;
-	max-width: none;
+	max-width: 15vw;
 	white-space: nowrap;
 	overflow: hidden;
-	transition: opacity 200ms ease, transform 280ms ease;
+	transition: max-width 280ms ease, opacity 200ms ease, transform 280ms ease;
 	transform: translateX(0);
 }
 
@@ -107,7 +107,6 @@
 }
 
 .navbar--collapsed .navbar--content {
-	width: 0;
 	max-width: 0;
 	opacity: 0;
 	transform: translateX(-0.5rem);
