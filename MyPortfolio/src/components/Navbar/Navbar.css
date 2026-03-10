@@ -42,6 +42,14 @@
 	transition-delay: calc((var(--nav-item-index, 0) * 80ms) + 40ms);
 }
 
+.navbar--link {
+	display: inline-block;
+}
+
+.navbar--linkActive .logoFont span {
+	color: var(--color-nav-logo-highlight);
+}
+
 .navbar--collapseBtn {
 	position: absolute;
 	top: 0;

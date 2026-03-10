@@ -1,7 +1,8 @@
-
 const CV = () => {
   return (
-	<div>CV</div>
+    <main className="container glass-card paragraph-font">
+      <div className="paragraph-font2">CV</div>
+    </main>
   )
 }
 

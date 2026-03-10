@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
-import { CV, Home } from './pages'
+import { CV, Home, Projects, Recipies } from './pages'
 import { Navbar, BoidsBackground } from '../components'
 
 const App = () => {
@@ -12,6 +12,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/cv" element={<CV />} />
+            <Route path="/recipies" element={<Recipies />} />
+            <Route path="/projects" element={<Projects />} />
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>
         </div>

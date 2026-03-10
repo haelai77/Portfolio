@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { NavLink } from 'react-router-dom'
 import LogoFont from '../LogoFont/LogoFont'
 import './Navbar.css'
 
@@ -36,9 +37,18 @@ const Navbar = () => {
       <div className="navbar--content" ref={contentRef}>
 
         <LogoFont root="Leo Lai" suffix=" 🏝️" />
-        <LogoFont root="Home" />
-        <LogoFont root="Projects" />
-        <LogoFont root="Recipies" />
+        <NavLink to="/" className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
+          <LogoFont root="Home" />
+        </NavLink>
+        <NavLink to="/projects" className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
+          <LogoFont root="Projects" />
+        </NavLink>
+        <NavLink to="/recipies" className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
+          <LogoFont root="Recipies" />
+        </NavLink>
+        <NavLink to="/cv" className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
+          <LogoFont root="CV" />
+        </NavLink>
 
       </div>
 
