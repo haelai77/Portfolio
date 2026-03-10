@@ -19,14 +19,13 @@ const Navbar = () => {
                 {char === " " ? "\u00A0" : char} {/* non-breaking space */}
               </span>
             );
-          })}🏝️
+          })} 🏝️
         </div>
-
-
 
         <div>buttons</div>
       </div>
 
+      {/* insert collapse button here */}
     </nav>
   )
 }
