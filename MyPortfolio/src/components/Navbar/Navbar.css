@@ -8,6 +8,7 @@
   line-height: 1;
   display: inline-block;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .logoFont span {
@@ -29,7 +30,7 @@
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: stretch;
-	width: max-content;
+	width: 14.5rem;
 	max-width: 100%;
 	min-height: 100vh;
 	padding: 2rem 1.25rem;
@@ -39,6 +40,10 @@
 	top: 0;
 	z-index: 1000;
 	flex: 0 0 auto;
+	overflow: hidden;
+	transition: width 280ms ease, padding 280ms ease;
+	padding-right: 2.75rem;
+	will-change: width, padding;
 }
 
 .navbar--content{
@@ -51,7 +56,58 @@
 	margin: 0;
 	padding: 0;
 	max-width: none;
+	white-space: nowrap;
+	overflow: hidden;
+	transition: opacity 200ms ease, transform 280ms ease;
+	transform: translateX(0);
 }
+
+.navbar--collapseBtn {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: 2.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	background: transparent;
+	color: var(--color-nav-text);
+	cursor: pointer;
+	transition: opacity 160ms ease;
+}
+
+.navbar--collapseBtn:hover {
+	opacity: 0.75;
+}
+
+.navbar--collapseIcon {
+	width: 1.2rem;
+	height: 1.2rem;
+	display: block;
+}
+
+.navbar--collapseBtn:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: -2px;
+}
+
+.navbar--collapsed {
+	width: 2.5rem;
+	min-width: 0;
+	padding: 0;
+}
+
+.navbar--collapsed .navbar--content {
+	width: 0;
+	max-width: 0;
+	opacity: 0;
+	transform: translateX(-0.5rem);
+	pointer-events: none;
+	user-select: none;
+}
+
 
 @media (max-width: 768px) {
 	.navbar {
@@ -62,9 +118,15 @@
 		position: relative;
 		border-right: 0;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+		padding-right: 2.75rem;
 	}
 
 	.navbar--content {
 		gap: 1rem;
+	}
+
+	.navbar--collapsed {
+		width: 100%;
+		padding: 1rem 2.75rem 1rem 1rem;
 	}
 }
