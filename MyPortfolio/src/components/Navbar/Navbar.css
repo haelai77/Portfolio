@@ -62,6 +62,13 @@
 	transform: translateX(0);
 }
 
+.navbar--content > * {
+	opacity: 1;
+	transform: translateY(0);
+	transition: opacity 240ms ease, transform 240ms ease;
+	transition-delay: calc((var(--nav-item-index, 0) * 80ms) + 40ms);
+}
+
 .navbar--collapseBtn {
 	position: absolute;
 	top: 0;
@@ -106,6 +113,12 @@
 	transform: translateX(-0.5rem);
 	pointer-events: none;
 	user-select: none;
+}
+
+.navbar--collapsed .navbar--content > * {
+	opacity: 0;
+	transform: translateY(-0.5rem);
+	transition-delay: 0ms;
 }
 
 
