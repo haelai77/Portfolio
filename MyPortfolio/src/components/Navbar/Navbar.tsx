@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import LogoFont from '../LogoFont/LogoFont'
 import './Navbar.css'
 
 const Navbar = () => {
@@ -34,28 +35,11 @@ const Navbar = () => {
 
       <div className="navbar--content" ref={contentRef}>
 
-        <div className="logoFont">
-          {"Leo Lai".split("").map((char, i, arr) => {
-            // Count only visible letters for delay
-            const visibleIndex = arr.slice(0, i).filter(c => c !== " ").length;
+        <LogoFont root="Leo Lai" suffix=" 🏝️" />
+        <LogoFont root="Home" />
+        <LogoFont root="Projects" />
+        <LogoFont root="Recipies" />
 
-            return (
-              <span
-                key={i}
-                style={{ transitionDelay: `${visibleIndex * 0.05}s` }}
-              >
-                {char === " " ? "\u00A0" : char} {/* non-breaking space */}
-              </span>
-            );
-          })} 🏝️
-        </div>
-
-        <div>buttons</div>
-        <div>buttons</div>
-        <div>buttons</div>
-        <div>buttons</div>
-        <div>buttons</div>
-        <div>buttons</div>
       </div>
 
       <button
