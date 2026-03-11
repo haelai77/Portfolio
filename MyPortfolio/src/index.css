@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 * {
   margin:0;
   padding:0;
@@ -45,16 +47,18 @@ a{
 .container--NavAndPageContent{
   display: flex;
   flex-direction: row;
-  min-height: 100vh; /* use min-height instead of fixed height */
+  height: 100vh;/* lock app layout to viewport */
   width: 100%;
   position: relative;
+  overflow: hidden;
   background-color: var(--color-nav-bg);
 }
 
 .container--pageContent{
   flex: 1;                  /* This makes it fill remaining space */
   min-width: 0;
-  min-height: 100vh;
+  min-height: 0;
+  height: 100%;
   position: relative;       /* useful if you have an absolutely-positioned canvas */
   overflow-x: hidden;
   overflow-y: auto;
