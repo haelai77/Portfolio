@@ -15,15 +15,17 @@ const App = () => {
       <div className="container--NavAndPageContent">
         <Navbar />
 
-        <BoidsBackground color="--color-boids"/>
-        <div className="container--pageContent" ref={pageContentRef}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/cv" element={<CV />} />
-            <Route path="/recipies" element={<Recipies />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="*" element={<div>Not Found</div>} />
-          </Routes>
+        <div className="container--pageShell">
+          <BoidsBackground color="--color-boids"/>
+          <div className="container--pageContent" ref={pageContentRef}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/cv" element={<CV />} />
+              <Route path="/recipies" element={<Recipies />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="*" element={<div>Not Found</div>} />
+            </Routes>
+          </div>
         </div>
 
       </div>
