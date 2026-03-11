@@ -20,25 +20,6 @@ const Home = () => {
         <div className="paragraph-font2">Interests</div>
       </div>
 
-      <div className="container glass-card paragraph-font">
-        <div className="paragraph-font2">Interests</div>
-      </div>
-
-      <div className="container glass-card paragraph-font">
-        <div className="paragraph-font2">Interests</div>
-      </div>
-
-      <div className="container glass-card paragraph-font">
-        <div className="paragraph-font2">Interests</div>
-      </div>
-
-      <div className="container glass-card paragraph-font">
-        <div className="paragraph-font2">Interests</div>
-      </div>
-
-      <div className="container glass-card paragraph-font">
-        <div className="paragraph-font2">Interests</div>
-      </div>
     </main>
   )
 }
