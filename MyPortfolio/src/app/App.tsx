@@ -1,13 +1,21 @@
-import { Route, Routes } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import { CV, Home, Projects, Recipies } from './pages'
 import { Navbar, BoidsBackground } from '../components'
 
 const App = () => {
+  const { pathname } = useLocation()
+  const pageContentRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    pageContentRef.current?.scrollTo({ top: 0, behavior: 'auto' })
+  }, [pathname])
+
   return (
       <div className="container--NavAndPageContent">
         <Navbar />
 
-        <div className="container--pageContent">
+        <div className="container--pageContent" ref={pageContentRef}>
           <BoidsBackground color="--color-boids"/>
           <Routes>
             <Route path="/" element={<Home />} />
