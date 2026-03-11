@@ -28,16 +28,24 @@ export type SwarmProps = {
 
 const BLEED_CSS_PX = 40;
 
+const wrapToRange = (value: number, min: number, max: number): number => {
+  const span = max - min;
+  if (span <= 0) {
+    return min;
+  }
+
+  return ((((value - min) % span) + span) % span) + min;
+};
+
 const resizeCanvas = (canvas: HTMLCanvasElement): { width: number; height: number; dpr: number } => {
-  const rect = canvas.getBoundingClientRect();
+  const host = canvas.parentElement;
+  const rect = host ? host.getBoundingClientRect() : canvas.getBoundingClientRect();
   const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
   const width = Math.max(1, Math.floor(rect.width * dpr));
   const height = Math.max(1, Math.floor(rect.height * dpr));
 
   canvas.width = width;
   canvas.height = height;
-  canvas.style.width = `${Math.floor(rect.width)}px`;
-  canvas.style.height = `${Math.floor(rect.height)}px`;
 
   return { width, height, dpr };
 };
@@ -72,6 +80,7 @@ const Swarm: React.FC<SwarmProps> = ({
   const rafRef = useRef<number | null>(null);
   const boidsRef = useRef<ReturnType<typeof createBoids>>([]);
   const dprRef = useRef<number>(1);
+  const previousSizeRef = useRef<{ width: number; height: number; dpr: number } | null>(null);
 
   const reducedMotion = useMemo(
     () =>
@@ -104,17 +113,53 @@ const Swarm: React.FC<SwarmProps> = ({
         numBoids,
       });
 
-      boidsRef.current = createBoids({
-        count,
-        glyphPool: glyph,
-        bounds,
-      });
+      const currentBoids = boidsRef.current;
+      const previousSize = previousSizeRef.current;
+
+      if (!previousSize || currentBoids.length === 0) {
+        boidsRef.current = createBoids({
+          count,
+          glyphPool: glyph,
+          bounds,
+        });
+        previousSizeRef.current = { width, height, dpr };
+        return;
+      }
+
+      const minX = -bounds.bleed;
+      const maxX = bounds.width + bounds.bleed;
+      const minY = -bounds.bleed;
+      const maxY = bounds.height + bounds.bleed;
+
+      // Preserve boid state across resize; only remap positions into next bounds.
+      for (const boid of currentBoids) {
+        boid.x = wrapToRange(boid.x, minX, maxX);
+        boid.y = wrapToRange(boid.y, minY, maxY);
+      }
+
+      if (currentBoids.length < count) {
+        const additionalBoids = createBoids({
+          count: count - currentBoids.length,
+          glyphPool: glyph,
+          bounds,
+        });
+        currentBoids.push(...additionalBoids);
+      } else if (currentBoids.length > count) {
+        currentBoids.length = count;
+      }
+
+      boidsRef.current = currentBoids;
+      previousSizeRef.current = { width, height, dpr };
     };
 
     initializeBoids();
 
     const observer = new ResizeObserver(initializeBoids);
-    observer.observe(canvas);
+    if (canvas.parentElement) {
+      observer.observe(canvas.parentElement);
+    } else {
+      observer.observe(canvas);
+    }
 
     return () => {
       observer.disconnect();
