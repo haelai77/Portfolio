@@ -7,6 +7,6 @@
 	z-index: 1;
 	display: block;
 	contain: paint;
-
+	background-color: var(--color-bg);
 }
 

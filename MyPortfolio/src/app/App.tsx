@@ -15,8 +15,8 @@ const App = () => {
       <div className="container--NavAndPageContent">
         <Navbar />
 
+        <BoidsBackground color="--color-boids"/>
         <div className="container--pageContent" ref={pageContentRef}>
-          <BoidsBackground color="--color-boids"/>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/cv" element={<CV />} />

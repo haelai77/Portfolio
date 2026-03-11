@@ -64,7 +64,6 @@ a{
   overflow-y: auto;
   z-index: 1;
   padding: 2rem;
-  background-color: var(--color-bg);
   border-top-left-radius: 32px;
   border-bottom-left-radius: 32px;
 }
