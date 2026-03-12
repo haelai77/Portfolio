@@ -44,8 +44,29 @@ const resizeCanvas = (canvas: HTMLCanvasElement): { width: number; height: numbe
   const width = Math.max(1, Math.floor(rect.width * dpr));
   const height = Math.max(1, Math.floor(rect.height * dpr));
 
+  const previousWidth = canvas.width;
+  const previousHeight = canvas.height;
+  let snapshot: HTMLCanvasElement | null = null;
+
+  if (previousWidth > 0 && previousHeight > 0) {
+    snapshot = document.createElement('canvas');
+    snapshot.width = previousWidth;
+    snapshot.height = previousHeight;
+    const snapshotCtx = snapshot.getContext('2d');
+    if (snapshotCtx) {
+      snapshotCtx.drawImage(canvas, 0, 0);
+    }
+  }
+
   canvas.width = width;
   canvas.height = height;
+
+  if (snapshot) {
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.drawImage(snapshot, 0, 0, previousWidth, previousHeight, 0, 0, width, height);
+    }
+  }
 
   return { width, height, dpr };
 };
@@ -154,7 +175,19 @@ const Swarm: React.FC<SwarmProps> = ({
 
     initializeBoids();
 
-    const observer = new ResizeObserver(initializeBoids);
+    let resizeRaf: number | null = null;
+    const scheduleResize = (): void => {
+      if (resizeRaf !== null) {
+        cancelAnimationFrame(resizeRaf);
+      }
+
+      resizeRaf = requestAnimationFrame(() => {
+        resizeRaf = null;
+        initializeBoids();
+      });
+    };
+
+    const observer = new ResizeObserver(scheduleResize);
     if (canvas.parentElement) {
       observer.observe(canvas.parentElement);
     } else {
@@ -162,6 +195,9 @@ const Swarm: React.FC<SwarmProps> = ({
     }
 
     return () => {
+      if (resizeRaf !== null) {
+        cancelAnimationFrame(resizeRaf);
+      }
       observer.disconnect();
     };
   }, [density, glyph, numBoids]);
