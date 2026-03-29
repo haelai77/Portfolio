@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import LogoFont from '../LogoFont/LogoFont'
+import { LogoFont } from '../index'
 import './Navbar.css'
 
 const Navbar = () => {
