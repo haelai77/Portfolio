@@ -17,17 +17,17 @@ const TechIcon = ({
 
   return (
     <div className={rootClassName}>
-      <div className="tech-icon-card__icon-shell">
+      <div className="tech-icon-card__surface">
         <img
           className="tech-icon-card__icon"
           src={iconSrc}
           alt={iconAlt ?? `${label} icon`}
-          width={16}
-          height={16}
+          width={32}
+          height={32}
           loading="lazy"
         />
+        <span className="tech-icon-card__label">{label}</span>
       </div>
-      <span className="tech-icon-card__label">{label}</span>
     </div>
   );
 };

@@ -1,18 +1,16 @@
 .tech-icon-card {
+  min-width: 64px;
+}
+
+.tech-icon-card__surface {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  min-width: 78px;
-}
-
-.tech-icon-card__icon-shell {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  gap: 0.35rem;
+  min-height: 68px;
+  padding: 0.4rem 0.45rem;
+  border-radius: 10px;
   background: rgba(8, 26, 44, 0.26);
   border: 1px solid rgba(255, 255, 255, 0.16);
   transition:
@@ -21,7 +19,7 @@
     border-color 0.18s ease;
 }
 
-.tech-icon-card:hover .tech-icon-card__icon-shell {
+.tech-icon-card:hover .tech-icon-card__surface {
   transform: translateY(-1px);
   background: rgba(8, 26, 44, 0.34);
   border-color: rgba(255, 255, 255, 0.24);
@@ -29,16 +27,16 @@
 
 .tech-icon-card__icon {
   display: block;
-  width: 16px;
-  height: 16px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
 }
 
 .tech-icon-card__label {
   text-align: center;
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  line-height: 1.1;
+  line-height: 1;
   color: var(--color-text);
 }

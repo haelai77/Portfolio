@@ -1,14 +1,6 @@
 import '@css/Home.css'
 import TechIcon from '@components/LabelledTechIcons/techIcon';
-
-const technologyIcons = [
-  { iconSrc: '/icons/techIcons/React.svg', label: 'React' },
-  { iconSrc: '/icons/techIcons/Python.svg', label: 'Python' },
-  { iconSrc: '/icons/techIcons/Docker.svg', label: 'Docker' },
-  { iconSrc: '/icons/techIcons/GraphQL.svg', label: 'GraphQL' },
-  { iconSrc: '/icons/techIcons/MySQL.svg', label: 'MySQL' },
-  { iconSrc: '/icons/techIcons/Azure.svg', label: 'Azure' },
-];
+import { technologyIcons } from '@utils/technologyIcons';
 
 const Home = () => {
   return (
