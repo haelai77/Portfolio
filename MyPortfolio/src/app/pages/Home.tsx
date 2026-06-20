@@ -1,6 +1,6 @@
 import '@css/Home.css'
-import TechIcon from '@components/LabelledTechIcons/techIcon';
-import { technologyIcons } from '@utils/technologyIcons';
+// import TechIcon from '@components/LabelledTechIcons/techIcon';
+// import { technologyIcons } from '@utils/technologyIcons';
 
 const Home = () => {
   return (
@@ -14,17 +14,17 @@ const Home = () => {
         <br /><br />
       </div>
 
-      <div className="container glass-card paragraph-font">
+      {/* <div className="container glass-card paragraph-font">
         <div className="paragraph-font2">Technologies</div>
         <div className="technology-grid">
           {technologyIcons.map(({ iconSrc, label }) => (
             <TechIcon key={label} iconSrc={iconSrc} label={label} />
           ))}
         </div>
-      </div>
+      </div> */}
       
       <div className="container glass-card paragraph-font">
-        <div className="paragraph-font2">Interests</div>
+        <div className="paragraph-font2">Stats</div>
       </div>
 
     </main>

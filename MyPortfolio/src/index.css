@@ -13,8 +13,9 @@ a{
 }
 /* 065006 deep green */
 /* 00272c deep blue */
+/* 1967a7 sky blue */
 :root {
-  --color-bg: #1967a7;
+  --color-bg: #000000;
 
   --color-text: #dcfcca;
   --color-boids: #FFFFFFD9;
