@@ -10,9 +10,9 @@
   gap: 0.35rem;
   min-height: 68px;
   padding: 0.4rem 0.45rem;
-  border-radius: 10px;
-  background: rgba(8, 26, 44, 0.26);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
   transition:
     transform 0.18s ease,
     background-color 0.18s ease,
@@ -21,8 +21,8 @@
 
 .tech-icon-card:hover .tech-icon-card__surface {
   transform: translateY(-1px);
-  background: rgba(8, 26, 44, 0.34);
-  border-color: rgba(255, 255, 255, 0.24);
+  background: var(--surface-2);
+  border-color: var(--border-strong);
 }
 
 .tech-icon-card__icon {
@@ -35,8 +35,8 @@
 .tech-icon-card__label {
   text-align: center;
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1;
-  color: var(--color-text);
+  color: var(--text-muted);
 }

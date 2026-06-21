@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import getCssVariableValue from '@utils/StringParsing/CssVariables';
 
 import './Swarm.css';
-import { drawBoids } from './render';
+import { drawBoids, isCjk } from './render';
 import { createBoids, resolveBoidCount, stepBoids } from './simulation';
 
 export type SwarmProps = {
@@ -201,6 +201,36 @@ const Swarm: React.FC<SwarmProps> = ({
       observer.disconnect();
     };
   }, [density, glyph, numBoids]);
+
+  // Canvas can't paint a webfont the browser hasn't downloaded, and it never
+  // triggers the download itself. Google serves CJK fonts in many unicode-range
+  // subsets, so we must pass the actual characters — otherwise only the Latin
+  // subset loads and the canvas falls back for 黎佩德.
+  useEffect(() => {
+    const cjkChars = Array.from(glyph).filter(isCjk).join('');
+    if (cjkChars) {
+      document.fonts?.load(`20px "Zhi Mang Xing"`, cjkChars).catch(() => {});
+    }
+  }, [glyph]);
+
+  // Re-glyph existing boids when the pool changes (keeps motion, swaps characters).
+  useEffect(() => {
+    const boids = boidsRef.current;
+    if (boids.length === 0) {
+      return;
+    }
+
+    const pickGlyph = (): string => {
+      if (glyph.length <= 1) {
+        return glyph || '?';
+      }
+      return glyph[Math.floor(Math.random() * glyph.length)] ?? '?';
+    };
+
+    for (const boid of boids) {
+      boid.glyph = pickGlyph();
+    }
+  }, [glyph]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

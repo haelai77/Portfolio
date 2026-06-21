@@ -3,10 +3,11 @@
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: stretch;
-	width: 14.5rem;
+	gap: 2rem;
+	width: 15rem;
 	max-width: 100%;
 	min-height: 100vh;
-	padding: 2rem 1.25rem;
+	padding: 2rem 1rem 2rem 1.25rem;
 	background-color: var(--color-nav-bg);
 	color: var(--color-nav-text);
 	position: sticky;
@@ -15,27 +16,29 @@
 	flex: 0 0 auto;
 	overflow: hidden;
 	transition: width 280ms ease, padding 280ms ease;
-	padding-right: 2.75rem;
 	will-change: width, padding;
 }
 
-.navbar--content{
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	align-items: flex-start;
-	gap: 2rem;
+/* Brand and menu share the same collapse/animation behaviour. overflow is
+   visible while expanded so the Bungee Shade drop-shadow isn't clipped. */
+.navbar--brand,
+.navbar--menu {
 	width: 100%;
-	margin: 0;
-	padding: 0;
-	max-width: 15vw;
+	max-width: 13rem;
 	white-space: nowrap;
-	overflow: hidden;
+	overflow: visible;
 	transition: max-width 280ms ease, opacity 200ms ease, transform 280ms ease;
 	transform: translateX(0);
 }
 
-.navbar--content > * {
+.navbar--menu {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 2rem;
+}
+
+.navbar--menu > * {
 	opacity: 1;
 	transform: translateY(0);
 	transition: opacity 240ms ease, transform 240ms ease;
@@ -50,6 +53,7 @@
 	color: var(--color-nav-logo-highlight);
 }
 
+/* ---- Toggle button ---- */
 .navbar--collapseBtn {
 	position: absolute;
 	top: 0;
@@ -70,56 +74,140 @@
 	opacity: 0.75;
 }
 
+.navbar--collapseBtn:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: -2px;
+}
+
 .navbar--collapseIcon {
 	width: 1.2rem;
 	height: 1.2rem;
 	display: block;
 }
 
-.navbar--collapseBtn:focus-visible {
-	outline: 2px solid currentColor;
-	outline-offset: -2px;
+/* Hamburger (mobile only) */
+.navbar--burger {
+	display: none;
+	position: relative;
+	width: 1.4rem;
+	height: 1.05rem;
 }
 
+.navbar--burger span {
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 2px;
+	border-radius: 2px;
+	background: var(--color-nav-text);
+	transition: transform 240ms ease, opacity 200ms ease;
+}
+
+.navbar--burger span:nth-child(1) { top: 0; }
+.navbar--burger span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+.navbar--burger span:nth-child(3) { bottom: 0; }
+
+/* Open state -> morph hamburger into an X */
+.navbar:not(.navbar--collapsed) .navbar--burger span:nth-child(1) {
+	top: 50%;
+	transform: translateY(-50%) rotate(45deg);
+}
+.navbar:not(.navbar--collapsed) .navbar--burger span:nth-child(2) {
+	opacity: 0;
+}
+.navbar:not(.navbar--collapsed) .navbar--burger span:nth-child(3) {
+	top: 50%;
+	bottom: auto;
+	transform: translateY(-50%) rotate(-45deg);
+}
+
+/* ---- Collapsed (desktop: shrink sidebar) ---- */
 .navbar--collapsed {
 	width: 2.5rem;
 	min-width: 0;
 	padding: 0;
 }
 
-.navbar--collapsed .navbar--content {
+.navbar--collapsed .navbar--brand,
+.navbar--collapsed .navbar--menu {
 	max-width: 0;
 	opacity: 0;
 	transform: translateX(-0.5rem);
+	overflow: hidden;
 	pointer-events: none;
 	user-select: none;
 }
 
-.navbar--collapsed .navbar--content > * {
+.navbar--collapsed .navbar--menu > * {
 	opacity: 0;
 	transform: translateY(-0.5rem);
 	transition-delay: 0ms;
 }
 
-
+/* ---- Mobile: top bar + hamburger dropdown ---- */
 @media (max-width: 768px) {
 	.navbar {
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0;
 		width: 100%;
 		min-width: 0;
 		min-height: auto;
-		padding: 1rem;
-		position: relative;
-		border-right: 0;
+		padding: 0.85rem 3.5rem 0.85rem 1.15rem; /* room for top-right hamburger */
+		position: sticky;
+		top: 0;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-		padding-right: 2.75rem;
+		transition: none;
 	}
 
-	.navbar--content {
-		gap: 1rem;
+	.navbar--brand {
+		flex: 1 1 auto;
+		max-width: none;
 	}
 
-	.navbar--collapsed {
-		width: 100%;
-		padding: 1rem 2.75rem 1rem 1rem;
+	/* Menu sits on its own row below the brand and animates open/closed. */
+	.navbar--menu {
+		flex: 1 0 100%;
+		max-width: none;
+		gap: 0.95rem;
+		margin-top: 1rem;
+		max-height: 22rem;
+		overflow: hidden;
+		transition: max-height 320ms ease, opacity 240ms ease, margin-top 280ms ease;
+	}
+
+	/* Collapsed = menu closed; brand + hamburger stay visible. */
+	.navbar--collapsed .navbar--brand {
+		max-width: none;
+		opacity: 1;
+		transform: none;
+		pointer-events: auto;
+		user-select: auto;
+	}
+
+	.navbar--collapsed .navbar--menu {
+		max-width: none;
+		max-height: 0;
+		margin-top: 0;
+		opacity: 0;
+		transform: none;
+		pointer-events: none;
+	}
+
+	/* Toggle becomes a hamburger pinned to the top-right. */
+	.navbar--collapseBtn {
+		height: 2.6rem;
+		top: 0.5rem;
+		bottom: auto;
+		right: 0.6rem;
+	}
+
+	.navbar--collapseIcon {
+		display: none;
+	}
+
+	.navbar--burger {
+		display: inline-block;
 	}
 }

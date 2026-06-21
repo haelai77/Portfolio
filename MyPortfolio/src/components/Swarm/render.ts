@@ -1,5 +1,12 @@
 import type { Boid } from './types';
 
+const DEFAULT_FONT_STACK =
+  'system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"';
+// Chinese name glyphs (黎佩德) render in the brush-script Zhi Mang Xing.
+const CJK_FONT_STACK = `"Zhi Mang Xing", ${DEFAULT_FONT_STACK}`;
+
+export const isCjk = (glyph: string): boolean => /[㐀-鿿豈-﫿]/.test(glyph);
+
 type DrawBoidsInput = {
   ctx: CanvasRenderingContext2D;
   boids: Boid[];
@@ -32,16 +39,26 @@ export const drawBoids = ({
   ctx.textBaseline = 'middle'; // Combined with `textAlign: center`, glyphs rotate around their midpoint.
 
   const fontPx = Math.max(8, baseSize * dpr);
-  ctx.font = `bold ${fontPx}px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"`;
+  const defaultFont = `bold ${fontPx}px ${DEFAULT_FONT_STACK}`;
+  const cjkFont = `${fontPx}px ${CJK_FONT_STACK}`; // no faux-bold: Zhi Mang Xing ships one weight
+  let currentFont = defaultFont;
+  ctx.font = currentFont;
 
   for (const boid of boids) {
+    const glyph = boid.glyph ?? '?';
     const angle = Math.atan2(boid.vy, boid.vx);
+
+    const wantFont = isCjk(glyph) ? cjkFont : defaultFont;
+    if (wantFont !== currentFont) {
+      ctx.font = wantFont;
+      currentFont = wantFont;
+    }
 
     ctx.globalAlpha = opacity;
     ctx.save();
     ctx.translate(boid.x, boid.y);
     ctx.rotate(angle);
-    ctx.fillText(boid.glyph ?? '?', 0, 0);
+    ctx.fillText(glyph, 0, 0);
     ctx.restore();
   }
 

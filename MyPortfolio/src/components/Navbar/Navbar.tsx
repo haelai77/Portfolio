@@ -1,55 +1,81 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { LogoFont } from '../index'
+import { LogoFont, BrandName } from '../index'
 import './Navbar.css'
 
-const Navbar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false) // triggers re-render when toggled
-  const contentRef = useRef<HTMLDivElement>(null) // useRef for navbar content reference
+const MOBILE_QUERY = '(max-width: 768px)'
+
+// Start collapsed on mobile (top-bar + hamburger), expanded on desktop.
+const getInitialCollapsed = () =>
+  typeof window !== 'undefined' && !!window.matchMedia?.(MOBILE_QUERY)?.matches
+
+type NavbarProps = {
+  chineseMode: boolean
+  onToggleName: () => void
+}
+
+const Navbar = ({ chineseMode, onToggleName }: NavbarProps) => {
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(getInitialCollapsed) // triggers re-render when toggled
+  const menuRef = useRef<HTMLDivElement>(null) // ref for the nav links container
 
   const handleToggle = () => {
     setIsCollapsed((prev) => !prev)
   }
 
-  // side effect to set --nav-item-index for each child of content (triggers on rerender)
+  // Keep collapse state sensible when crossing the mobile breakpoint.
   useEffect(() => {
-    const contentEl = contentRef.current
-    if (!contentEl) return
+    const mql = window.matchMedia(MOBILE_QUERY)
+    const handleChange = (event: MediaQueryListEvent) => setIsCollapsed(event.matches)
+    mql.addEventListener('change', handleChange)
+    return () => mql.removeEventListener('change', handleChange)
+  }, [])
 
-    // arrow function to set --nav-item-index for each child
+  // On mobile, close the menu after navigating.
+  const handleNavClick = () => {
+    if (window.matchMedia(MOBILE_QUERY).matches) {
+      setIsCollapsed(true)
+    }
+  }
+
+  // side effect to set --nav-item-index for each link (drives the staggered animation)
+  useEffect(() => {
+    const menuEl = menuRef.current
+    if (!menuEl) return
+
     const setChildIndexes = () => {
-      Array.from(contentEl.children).forEach((child, index) => {
+      Array.from(menuEl.children).forEach((child, index) => {
         (child as HTMLElement).style.setProperty('--nav-item-index', String(index))
       })
     }
 
     setChildIndexes()
 
-    const observer = new MutationObserver(setChildIndexes) // observe changes to content's children and update indexes accordingly
-    observer.observe(contentEl, { childList: true })
+    const observer = new MutationObserver(setChildIndexes)
+    observer.observe(menuEl, { childList: true })
 
     return () => observer.disconnect()
-  }, []) // no dependencies to trigger i.e. only runs on mount and content changes via observer
+  }, [])
 
   return (
     <nav className={`navbar ${isCollapsed ? 'navbar--collapsed' : ''}`}>
 
-      <div className="navbar--content" ref={contentRef}>
+      <div className="navbar--brand">
+        <BrandName active={chineseMode} onToggle={onToggleName} />
+      </div>
 
-        <LogoFont root="Leo Lai" suffix=" 🏝️" />
-        <NavLink to="/" className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
+      <div className="navbar--menu" ref={menuRef}>
+        <NavLink to="/" onClick={handleNavClick} className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
           <LogoFont root="Home" />
         </NavLink>
-        <NavLink to="/projects" className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
+        <NavLink to="/projects" onClick={handleNavClick} className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
           <LogoFont root="Projects" />
         </NavLink>
-        <NavLink to="/recipies" className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
+        <NavLink to="/recipies" onClick={handleNavClick} className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
           <LogoFont root="Recipies" />
         </NavLink>
-        <NavLink to="/cv" className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
+        <NavLink to="/cv" onClick={handleNavClick} className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
           <LogoFont root="CV" />
         </NavLink>
-
       </div>
 
       <button
@@ -59,9 +85,14 @@ const Navbar = () => {
         aria-label={isCollapsed ? 'Expand navigation' : 'Collapse navigation'}
         aria-expanded={!isCollapsed}
       >
+        <span className="navbar--burger" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
         <img
           className="navbar--collapseIcon"
-          src={isCollapsed ? '/icons/expansion/sidebar-right.svg' : '/icons/expansion/sidebar-left.svg'}
+          src={isCollapsed ? `${import.meta.env.BASE_URL}icons/expansion/sidebar-right.svg` : `${import.meta.env.BASE_URL}icons/expansion/sidebar-left.svg`}
           alt=""
           aria-hidden="true"
         />
@@ -70,4 +101,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar	
+export default Navbar

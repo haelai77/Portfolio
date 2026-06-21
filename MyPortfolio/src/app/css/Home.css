@@ -1,58 +1,95 @@
-@import url("https://fonts.bunny.net/css?family=bungee-shade:400");
-@import url('https://fonts.googleapis.com/css2?family=Nabla&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Neonderthaw&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Coral+Pixels&display=swap');
+/* Home-specific layout. Shared primitives (.page, .card, .btn, .tag, .eyebrow,
+   typography) live in index.css. */
 
-.paragraph-font1 {
-	font-family: 'Bungee Shade', sans-serif;
-	color: var(--color-text);
-	font-size: 25px;
-	opacity: 0;
-	animation: fadeIn 0.5s ease-in forwards;
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
-.paragraph-font2 {
-	font-family: 'Nabla', sans‑serif;
-	color: var(--color-text);
-	font-size: 25px;
-	opacity: 0;
-	animation: fadeIn 0.5s ease-in forwards;
+.hero-name {
+  font-size: var(--fs-display);
+  color: var(--text);
 }
 
-.paragraph-font3 {
-	font-family: 'Neonderthaw', sans-serif;
-	color: var(--color-text);
-	font-size: 25px;
-	opacity: 0;
-	animation: fadeIn 0.5s ease-in forwards;
+.hero-name .accent {
+  color: var(--amber);
 }
 
-.paragraph-font4 {
-	font-family: 'Coral Pixels', sans-serif;
-	color: var(--text-color);
-	font-size: 25px;
-	opacity: 0;
-	animation: fadeIn 0.5s ease-in forwards;
-
+.hero-name-divider {
+  margin: 0 0.18em;
+  color: var(--text-faint);
+  font-weight: 400;
 }
 
-
-@keyframes fadeIn {
-	to {
-		opacity: 1;
-	}
+.hero-name-zh {
+  font-family: "Zhi Mang Xing", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  font-weight: 400;
+  color: var(--violet);
+  white-space: nowrap;
 }
 
-.technology-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(64px, 68px));
-	gap: 0.3rem;
-	justify-content: start;
-	margin-top: 0.65rem;
+.hero-flag {
+  display: inline-block;
+  height: 0.7em;
+  width: auto;
+  margin: 0 0.18em;
+  vertical-align: -0.02em;
+  border-radius: 3px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.hero-role {
+  color: var(--text-muted);
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.hero-intro {
+  margin-top: var(--space-2);
+}
+
+/* Tech stack row */
+.tech-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.tech-grid .tech-icon-card {
+  flex: 0 0 76px;
+  width: 76px;
 }
 
 @media (max-width: 640px) {
-	.technology-grid {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-	}
+  .tech-grid .tech-icon-card {
+    flex-basis: 64px;
+    width: 64px;
+  }
+}
+
+/* Highlights */
+.highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: var(--space-4);
+}
+
+.highlight-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.highlight-card .label {
+  font-size: var(--fs-eyebrow);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--amber);
+  font-weight: 600;
+}
+
+.highlight-card .value {
+  font-weight: 500;
+  color: var(--text);
 }

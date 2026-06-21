@@ -34,5 +34,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          # publish_dir is relative to the repo root, NOT the job's
+          # working-directory (that only applies to `run:` steps).
+          publish_dir: ./MyPortfolio/dist
           publish_branch: gh-pages

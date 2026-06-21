@@ -1,0 +1,100 @@
+.brandName {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	isolation: isolate;
+
+	/* native <button> reset */
+	background: none;
+	border: 0;
+	margin: 0;
+	padding: 0;
+	font: inherit;
+	color: inherit;
+	text-align: left;
+	line-height: 1;
+}
+
+/* English name stays in normal flow and defines the box size. */
+.brandName--en {
+	display: inline-block;
+	transition: opacity 280ms ease, transform 280ms ease, filter 280ms ease;
+}
+
+.brandName--active .brandName--en {
+	opacity: 0;
+	transform: translateY(-6px) scale(0.94);
+	filter: blur(1px);
+	pointer-events: none;
+}
+
+/* Chinese name overlays the English one, revealed on toggle. */
+.brandName--zh {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	display: inline-flex;
+	align-items: center;
+	opacity: 0;
+	transform: translateY(4px);
+	transition: opacity 320ms ease, transform 320ms ease;
+	pointer-events: none;
+}
+
+/* Zhi Mang Xing — a flowing Chinese brush-script. Falls back per-glyph to a
+   system CJK font if a character is missing. */
+.brandName--zhFont {
+	font-family: "Zhi Mang Xing", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+	font-weight: 400;
+	font-size: 34px;
+	letter-spacing: 0;
+}
+
+.brandName--active .brandName--zh {
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: auto; /* re-enable hover so the highlight wave works */
+}
+
+/* ---- particle burst (radiates from the centre of the name) ---- */
+.brandName--particles {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 0;
+	height: 0;
+	pointer-events: none;
+	z-index: 2;
+}
+
+.brandName--particle {
+	position: absolute;
+	left: 0;
+	top: 0;
+	font-size: 0.95rem;
+	line-height: 1;
+	opacity: 0;
+	transform: translate(-50%, -50%) scale(0.3);
+	animation: brandBurst 760ms cubic-bezier(0.2, 0.7, 0.3, 1) var(--delay, 0ms) forwards;
+}
+
+@keyframes brandBurst {
+	0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+	20% { opacity: 1; }
+	100% {
+		opacity: 0;
+		transform: translate(calc(-50% + var(--dx, 0)), calc(-50% + var(--dy, 0))) scale(1);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.brandName--en,
+	.brandName--zh {
+		transition-duration: 120ms;
+		transform: none !important;
+		filter: none;
+	}
+	.brandName--particles {
+		display: none;
+	}
+}

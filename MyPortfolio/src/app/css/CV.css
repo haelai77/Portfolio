@@ -1,0 +1,61 @@
+/* CV-specific layout. Shared primitives live in index.css. */
+
+.cv-entry {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: var(--space-4);
+}
+
+.cv-entry + .cv-entry {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+}
+
+.cv-entry .dates {
+  color: var(--text-faint);
+  font-size: var(--fs-small);
+  font-weight: 500;
+}
+
+.cv-entry .role {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.cv-entry .org {
+  color: var(--violet);
+  font-weight: 500;
+}
+
+.cv-entry ul {
+  margin-top: var(--space-2);
+  padding-left: 1.1rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.cv-skills {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: var(--space-4);
+}
+
+.cv-skill-group .label {
+  font-size: var(--fs-eyebrow);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--amber);
+  font-weight: 600;
+  display: block;
+  margin-bottom: var(--space-3);
+}
+
+@media (max-width: 560px) {
+  .cv-entry {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+}
