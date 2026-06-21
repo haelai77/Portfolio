@@ -21,6 +21,8 @@ export type SwarmProps = {
   maxSpeed?: number;
   perception?: number;
   jitter?: number;
+  cursorReaction?: boolean;
+  cursorAttract?: boolean;
   className?: string;
   style?: React.CSSProperties;
   paused?: boolean;
@@ -93,6 +95,8 @@ const Swarm: React.FC<SwarmProps> = ({
   alignment = 0.03,
   perception = 80,
   jitter = 0.001,
+  cursorReaction = false,
+  cursorAttract = false,
   className,
   style,
   paused = false,
@@ -101,6 +105,7 @@ const Swarm: React.FC<SwarmProps> = ({
   const rafRef = useRef<number | null>(null);
   const boidsRef = useRef<ReturnType<typeof createBoids>>([]);
   const dprRef = useRef<number>(1);
+  const pointerRef = useRef<{ x: number; y: number } | null>(null);
   const previousSizeRef = useRef<{ width: number; height: number; dpr: number } | null>(null);
 
   const reducedMotion = useMemo(
@@ -213,6 +218,46 @@ const Swarm: React.FC<SwarmProps> = ({
     }
   }, [glyph]);
 
+  // Track the pointer (in canvas device-pixel space) while cursor reaction is on.
+  useEffect(() => {
+    if (!cursorReaction) {
+      pointerRef.current = null;
+      return;
+    }
+
+    const handleMove = (event: PointerEvent): void => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const inside =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
+      if (!inside) {
+        pointerRef.current = null;
+        return;
+      }
+      const dpr = dprRef.current;
+      pointerRef.current = {
+        x: (event.clientX - rect.left) * dpr,
+        y: (event.clientY - rect.top) * dpr,
+      };
+    };
+
+    const clear = (): void => {
+      pointerRef.current = null;
+    };
+
+    window.addEventListener('pointermove', handleMove, { passive: true });
+    window.addEventListener('pointerleave', clear);
+    return () => {
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerleave', clear);
+      pointerRef.current = null;
+    };
+  }, [cursorReaction]);
+
   // Re-glyph existing boids when the pool changes (keeps motion, swaps characters).
   useEffect(() => {
     const boids = boidsRef.current;
@@ -256,6 +301,17 @@ const Swarm: React.FC<SwarmProps> = ({
       const height = canvas.height;
       const dpr = dprRef.current;
 
+      const pointerPos = pointerRef.current;
+      const pointer = pointerPos
+        ? {
+            x: pointerPos.x,
+            y: pointerPos.y,
+            radius: 140 * dpr,
+            strength: maxSpeed * speed * dpr * 7,
+            attract: cursorAttract,
+          }
+        : null;
+
       stepBoids({
         boids: boidsRef.current,
         bounds: {
@@ -273,6 +329,7 @@ const Swarm: React.FC<SwarmProps> = ({
           maxSpeed,
         },
         dpr,
+        pointer,
       });
 
       drawBoids({
@@ -302,6 +359,7 @@ const Swarm: React.FC<SwarmProps> = ({
     baseSize,
     cohesion,
     color,
+    cursorAttract,
     jitter,
     maxSpeed,
     opacity,

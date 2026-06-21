@@ -76,6 +76,9 @@ const Navbar = ({ chineseMode, onToggleName }: NavbarProps) => {
         <NavLink to="/cv" onClick={handleNavClick} className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
           <LogoFont root="CV" />
         </NavLink>
+        <NavLink to="/settings" onClick={handleNavClick} className={({ isActive }) => `navbar--link ${isActive ? 'navbar--linkActive' : ''}`}>
+          <LogoFont root="Settings" />
+        </NavLink>
       </div>
 
       <button

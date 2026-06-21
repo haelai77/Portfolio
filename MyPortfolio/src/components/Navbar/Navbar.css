@@ -157,7 +157,6 @@
 		padding: 0.85rem 3.5rem 0.85rem 1.15rem; /* room for top-right hamburger */
 		position: sticky;
 		top: 0;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 		transition: none;
 	}
 

@@ -92,16 +92,26 @@ const wrapPosition = (value: number, min: number, max: number, span: number): nu
  * Applies one boid simulation step.
  * Uses toroidal distance so boids near opposite edges still influence each other naturally.
  */
+export type PointerInfluence = {
+  x: number;
+  y: number;
+  radius: number;
+  strength: number;
+  attract: boolean;
+};
+
 export const stepBoids = ({
   boids,
   bounds,
   config,
   dpr,
+  pointer,
 }: {
   boids: Boid[];
   bounds: SwarmBounds;
   config: SwarmMovementConfig;
   dpr: number;
+  pointer?: PointerInfluence | null;
 }): void => {
   if (boids.length === 0) {
     return;
@@ -175,6 +185,21 @@ export const stepBoids = ({
     // Light randomized steering keeps large swarms from locking into rigid lanes.
     vx += (Math.random() - 0.5) * jitter;
     vy += (Math.random() - 0.5) * jitter;
+
+    // Cursor influence: push away (flee) or pull toward (attract) within radius.
+    if (pointer) {
+      const awayX = boid.x - pointer.x;
+      const awayY = boid.y - pointer.y;
+      const distSq = awayX * awayX + awayY * awayY;
+      const radiusSq = pointer.radius * pointer.radius;
+      if (distSq < radiusSq && distSq > 0.01) {
+        const dist = Math.sqrt(distSq);
+        const falloff = 1 - dist / pointer.radius;
+        const sign = pointer.attract ? -1 : 1;
+        vx += (awayX / dist) * falloff * pointer.strength * sign;
+        vy += (awayY / dist) * falloff * pointer.strength * sign;
+      }
+    }
 
     const velocity = Math.hypot(vx, vy) || 1e-6;
     if (velocity > maxVelocity) {

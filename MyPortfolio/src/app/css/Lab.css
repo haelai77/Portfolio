@@ -1,0 +1,101 @@
+/* Swarm Lab controls. Shared primitives (.page, .card, .btn) live in index.css. */
+
+.lab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.lab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: var(--space-4) var(--space-5);
+}
+
+.lab-field {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr 3.2rem;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.lab-field__label {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.lab-field__value {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Range input — themed to the accents */
+.lab-field input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-strong);
+  cursor: pointer;
+}
+
+.lab-field input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--violet);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--violet);
+}
+
+.lab-field input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--violet);
+  border: 2px solid var(--bg);
+}
+
+.lab-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+.lab-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lab-switch input[type="checkbox"] {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--violet);
+  cursor: pointer;
+}
+
+.lab-controls .btn--ghost:last-child {
+  margin-left: auto;
+}
+
+@media (max-width: 520px) {
+  .lab-field {
+    grid-template-columns: 5.5rem 1fr 3rem;
+    gap: var(--space-2);
+  }
+  .lab-controls .btn--ghost:last-child {
+    margin-left: 0;
+  }
+}
