@@ -26,7 +26,7 @@ const experience = [
     role: 'Software Engineering Teaching Assistant',
     org: 'University of Bristol',
     points: [
-      'Mentored students in software engineering practice — Docker, GitHub Actions and Agile methodologies.',
+      'Mentored students in software engineering practice: Docker, GitHub Actions and Agile methodologies.',
       'Coached iterative development, continuous feedback and agile project management.',
       'Facilitated weekly stand-ups and code reviews, promoting collaboration and high coding standards.',
     ],
