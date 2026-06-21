@@ -1,5 +1,4 @@
-@import url("https://fonts.bunny.net/css?family=bungee-shade:400");
-
+/* 'Bungee Shade' is loaded via <link> in index.html. */
 .logoFont {
   font-family: 'Bungee Shade', sans-serif;
   font-weight: 700;

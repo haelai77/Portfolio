@@ -69,7 +69,7 @@ const SwarmLab = ({
       <PageHeader
         eyebrow="Interactive"
         title="Settings"
-        subtitle="Tune the swarm that drifts behind everything — changes apply live and follow you across the site."
+        subtitle="Tune the swarm that drifts behind everything - changes apply live and follow you across the site."
       />
 
       <section className="section fade-up">

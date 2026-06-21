@@ -1,9 +1,7 @@
 @import "tailwindcss";
 
-/* Brand display font (content headings) + body font.
-   Bungee Shade (logo) is imported in LogoFont.css. */
-@import url("https://fonts.bunny.net/css?family=bungee:400");
-/* Inter, Zhi Mang Xing, WDXL Lubrifont JP N are loaded via <link> in index.html */
+/* All web fonts (Bungee, Bungee Shade, Inter, Zhi Mang Xing) are loaded via
+   <link> tags in index.html — CSS @import after Tailwind breaks ordering. */
 
 *,
 *::before,
